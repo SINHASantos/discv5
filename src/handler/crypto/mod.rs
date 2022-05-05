@@ -179,7 +179,7 @@ fn generate_signing_nonce(
     let mut data = ID_SIGNATURE_TEXT.as_bytes().to_vec();
     data.extend_from_slice(challenge_data.as_ref());
     data.extend_from_slice(ephem_pubkey);
-    data.extend_from_slice(&dst_id.raw().to_vec());
+    data.extend_from_slice(dst_id.raw().as_ref());
     data
 }
 
@@ -346,7 +346,7 @@ mod tests {
         let node2_ip = "127.0.0.1".parse().unwrap();
         let node2_enr = EnrBuilder::new("v4")
             .ip(node2_ip)
-            .udp(node2_port)
+            .udp4(node2_port)
             .build(&node2_key)
             .unwrap();
 

@@ -97,7 +97,6 @@ impl std::convert::TryFrom<Multiaddr> for NodeContact {
                 .map_err(|_| "Invalid public key")?
             {
                 PublicKey::Secp256k1(pk) => {
-                    // TODO: Remove libp2p dep to avoid conversion here
                     enr::k256::ecdsa::VerifyingKey::from_sec1_bytes(&pk.encode_uncompressed())
                         .expect("Libp2p key conversion, always valid")
                         .into()
@@ -163,7 +162,7 @@ impl NodeAddress {
     }
 
     pub fn from_enr(enr: &Enr) -> Result<Self, &'static str> {
-        let socket_addr = enr.udp_socket().ok_or("Enr is not contactable")?;
+        let socket_addr = enr.udp4_socket().ok_or("Enr is not contactable")?.into();
         let node_id = enr.node_id();
         Ok(NodeAddress {
             socket_addr,
